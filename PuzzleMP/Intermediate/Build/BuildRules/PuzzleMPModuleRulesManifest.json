@@ -1,8 +1,0 @@
-{
-	"SourceFiles": [
-		"D:\\Github Projects\\MultiplayerUE4.27\\PuzzleMP\\Source\\PuzzleMP\\PuzzleMP.Build.cs",
-		"D:\\Github Projects\\MultiplayerUE4.27\\PuzzleMP\\Source\\PuzzleMP.Target.cs",
-		"D:\\Github Projects\\MultiplayerUE4.27\\PuzzleMP\\Source\\PuzzleMPEditor.Target.cs"
-	],
-	"EngineVersion": "4.27.2"
-}
