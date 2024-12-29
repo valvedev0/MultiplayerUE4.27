@@ -1,0 +1,14 @@
+{
+	"Targets": [
+		{
+			"Name": "PuzzleMP",
+			"Path": "D:\\Github Projects\\MultiplayerUE4.27\\PuzzleMP\\Source\\PuzzleMP.Target.cs",
+			"Type": "Game"
+		},
+		{
+			"Name": "PuzzleMPEditor",
+			"Path": "D:\\Github Projects\\MultiplayerUE4.27\\PuzzleMP\\Source\\PuzzleMPEditor.Target.cs",
+			"Type": "Editor"
+		}
+	]
+}

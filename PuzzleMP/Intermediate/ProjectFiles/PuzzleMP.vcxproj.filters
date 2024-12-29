@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="..\..\PuzzleMP.uproject" />
+    <Filter Include="Source">
+      <UniqueIdentifier>{CBF7CF2F-9BDD-489E-9C53-D8DB9BC695C2}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\PuzzleMP.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <None Include="..\..\Source\PuzzleMPEditor.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <Filter Include="Config">
+      <UniqueIdentifier>{0512C29D-92B4-42DE-9A63-8CE0199D49AF}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Config\DefaultEditor.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultEditorPerProjectUserSettings.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultEngine.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultGame.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultInput.ini">
+      <Filter>Config</Filter>
+    </None>
+    <Filter Include="Source\PuzzleMP">
+      <UniqueIdentifier>{4AD78F86-67C2-4D31-AB14-572273B29D43}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\PuzzleMP\MyStaticMeshActor.cpp">
+      <Filter>Source\PuzzleMP</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\PuzzleMP\MyStaticMeshActor.h">
+      <Filter>Source\PuzzleMP</Filter>
+    </ClInclude>
+    <None Include="..\..\Source\PuzzleMP\PuzzleMP.Build.cs">
+      <Filter>Source\PuzzleMP</Filter>
+    </None>
+    <ClCompile Include="..\..\Source\PuzzleMP\PuzzleMP.cpp">
+      <Filter>Source\PuzzleMP</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\PuzzleMP\PuzzleMP.h">
+      <Filter>Source\PuzzleMP</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\PuzzleMP\PuzzleMPCharacter.cpp">
+      <Filter>Source\PuzzleMP</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\PuzzleMP\PuzzleMPCharacter.h">
+      <Filter>Source\PuzzleMP</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\PuzzleMP\PuzzleMPGameMode.cpp">
+      <Filter>Source\PuzzleMP</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\PuzzleMP\PuzzleMPGameMode.h">
+      <Filter>Source\PuzzleMP</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
