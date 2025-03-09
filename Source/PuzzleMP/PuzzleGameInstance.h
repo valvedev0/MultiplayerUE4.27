@@ -24,8 +24,15 @@ class PUZZLEMP_API UPuzzleGameInstance : public UGameInstance
 	UFUNCTION(Exec)
 	void Host();
 
+	//create a load menu funmction that is blueprint callable and will be used to load the menu in the main menu map
+	UFUNCTION(BlueprintCallable)
+	void LoadMenu();
+
 	//create function to join a game
 	UFUNCTION(Exec)
 	void Join(const FString& Address);
+
+	//create a subclass for the main menu which is of UserWidget type and we will make use of contrucion helpers to use the class finder
+	TSubclassOf<class UUserWidget> MenuClass;
 	
 };
