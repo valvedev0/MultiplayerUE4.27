@@ -5,6 +5,7 @@
 #include "Engine/Engine.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Blueprint/UserWidget.h"
+#include "MenuUI.h"
 
 UPuzzleGameInstance::UPuzzleGameInstance(const FObjectInitializer& ObjectInitializer)
 {
@@ -25,24 +26,12 @@ void UPuzzleGameInstance::LoadMenu()
 {
 	//create a widget and add it to the viewport
 	if (!ensure(MenuClass != nullptr)) return;
-	UUserWidget* Menu = CreateWidget<UUserWidget>(this, MenuClass);
-	if (!ensure(Menu != nullptr)) return;
-	Menu->AddToViewport();
-
-	Menu->bIsFocusable = true;
-
-	//now we will set the input mode to the game and UI only and make use of Player Controller to set the input mode
-	//get ref of the player controller
-	APlayerController* PlayerController = GetFirstLocalPlayerController();
-	if (!ensure(PlayerController != nullptr)) return;
-
-	FInputModeUIOnly InputModeData;
-	InputModeData.SetWidgetToFocus(Menu->TakeWidget());
-	InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+	Menu = CreateWidget<UMenuUI>(this, MenuClass);
 	
-	//make use of the player controller to set the input mode and show the cursor
-	PlayerController->SetInputMode(InputModeData);
-	PlayerController->bShowMouseCursor = true;
+	if (!ensure(Menu != nullptr)) return;
+	
+	Menu->Setup();
+	Menu->SetMenuInterface(this);
 
 
 }
@@ -52,6 +41,11 @@ void UPuzzleGameInstance::LoadMenu()
 
 void UPuzzleGameInstance::Host()
 {
+
+	if (Menu != nullptr)
+	{
+		Menu->Teardown();
+	}
 	
 	UEngine* Engine = GetEngine();
 	if (!ensure(Engine != nullptr)) return;
@@ -67,9 +61,14 @@ void UPuzzleGameInstance::Host()
 
 
 void UPuzzleGameInstance::Join(const FString& Address)
-{
-	UE_LOG(LogTemp, Warning, TEXT("JOINing game"));
+{	
 
+	if (Menu != nullptr)
+	{
+		Menu->Teardown();
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("JOINing game"));
 
 	UEngine* Engine = GetEngine();
 	if (!ensure(Engine != nullptr)) return;

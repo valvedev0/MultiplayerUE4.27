@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "MenuInterface.h"
 #include "PuzzleGameInstance.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PUZZLEMP_API UPuzzleGameInstance : public UGameInstance
+class PUZZLEMP_API UPuzzleGameInstance : public UGameInstance, public IMenuInterface
 {
 	GENERATED_BODY()
 
@@ -34,5 +35,7 @@ class PUZZLEMP_API UPuzzleGameInstance : public UGameInstance
 
 	//create a subclass for the main menu which is of UserWidget type and we will make use of contrucion helpers to use the class finder
 	TSubclassOf<class UUserWidget> MenuClass;
+
+	class UMenuUI* Menu;
 	
 };
