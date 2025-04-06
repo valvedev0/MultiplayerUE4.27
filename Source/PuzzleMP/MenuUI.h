@@ -3,29 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
-#include "MenuInterface.h"
-
+#include "MenuWidget.h"
 #include "MenuUI.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PUZZLEMP_API UMenuUI : public UUserWidget
+class PUZZLEMP_API UMenuUI : public UMenuWidget
 {
 	GENERATED_BODY()
 
-public:
 
-	//function to host the server
-	void SetMenuInterface(IMenuInterface* MenuInterface);
-	
-	//function to set the menu interface
-	void Setup();
-
-	//function to reverse setup when the menu is closed 
-	void Teardown();
 
 
 protected:
@@ -73,7 +62,7 @@ private:
 	class UEditableTextBox* IPAddressField;
 
 	
-	IMenuInterface* MenuInterface;
+
 
 
 
