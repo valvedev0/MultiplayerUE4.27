@@ -5,6 +5,9 @@
 #include "Engine/Engine.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Blueprint/UserWidget.h"
+
+#include "OnlineSubsystem.h"
+
 #include "MenuWidget.h"
 #include "MenuUI.h"
 
@@ -25,6 +28,22 @@ UPuzzleGameInstance::UPuzzleGameInstance(const FObjectInitializer& ObjectInitial
 
 void UPuzzleGameInstance::Init()
 {
+	//get online subsystem and check if it is valid
+	IOnlineSubsystem* Subsystem = IOnlineSubsystem::Get();
+	if(Subsystem != nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Found Online Subsystem %s"), *Subsystem->GetSubsystemName().ToString());
+		IOnlineSessionPtr SessionInterface = Subsystem->GetSessionInterface();
+		if(SessionInterface.IsValid())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Found Session Interface"));
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Found No Online Subsystem"));
+	}
+	
 	UE_LOG(LogTemp, Warning, TEXT("Found UWidget Class %s"), *MenuClass->GetName());
 }
 
