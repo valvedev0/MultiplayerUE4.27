@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "MenuInterface.h"
-
+#include "OnlineSubsystem.h"
 #include "PuzzleGameInstance.generated.h"
 
 /**
@@ -45,5 +45,18 @@ class PUZZLEMP_API UPuzzleGameInstance : public UGameInstance, public IMenuInter
 	TSubclassOf<class UUserWidget> InGameMenuClass;
 
 	class UMenuUI* Menu;
+
+
+	TSharedPtr<class FOnlineSessionSearch> SessionSearch;
+
+	IOnlineSessionPtr SessionInterface;
+
+	void OnCreateSessionComplete(FName SessionName, bool bWasSuccessful);
+	void OnDestroySessionComplete(FName SessionName, bool bWasSuccessful);
+	void OnFindSessionsComplete(bool bWasSuccessful);
+
+	void CreateSession();
+
+
 	
 };
