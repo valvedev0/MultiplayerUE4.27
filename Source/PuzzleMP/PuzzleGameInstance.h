@@ -57,6 +57,8 @@ class PUZZLEMP_API UPuzzleGameInstance : public UGameInstance, public IMenuInter
 
 	void CreateSession();
 
+	//refresh server list override
+	void RefreshServerList() override;
 
 	
 };

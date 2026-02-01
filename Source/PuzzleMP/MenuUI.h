@@ -14,7 +14,12 @@ class PUZZLEMP_API UMenuUI : public UMenuWidget
 {
 	GENERATED_BODY()
 
+public:
 
+	UMenuUI(const FObjectInitializer& ObjectInitializer);
+
+	//set the server list function
+	void SetServerList(TArray<FString> ServerNames);
 
 
 protected:
@@ -22,7 +27,7 @@ protected:
 
 private:
 
-	
+	TSubclassOf<class UUserWidget> ServerRowClass;
 
 	UFUNCTION()
 	void HostServer();
@@ -58,8 +63,12 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	class UWidget* JOinMenu;
 
+	//UPROPERTY(meta = (BindWidget))
+	//class UEditableTextBox* IPAddressField;
+
 	UPROPERTY(meta = (BindWidget))
-	class UEditableTextBox* IPAddressField;
+	class UPanelWidget* ServerList;
+
 
 	
 

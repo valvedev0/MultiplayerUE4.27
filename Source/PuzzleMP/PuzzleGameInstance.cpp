@@ -43,15 +43,7 @@ void UPuzzleGameInstance::Init()
 			SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UPuzzleGameInstance::OnDestroySessionComplete);
 			SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UPuzzleGameInstance::OnFindSessionsComplete);
 
-			SessionSearch = MakeShareable(new FOnlineSessionSearch());
-			if(SessionSearch.IsValid())
-			{
 
-				SessionSearch->bIsLanQuery = true;
-				UE_LOG(LogTemp, Warning, TEXT("Session Search is starting"));
-				SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
-
-			}
 
 		}
 	}
@@ -133,6 +125,19 @@ void UPuzzleGameInstance::CreateSession()
 	}
 }
 
+void UPuzzleGameInstance::RefreshServerList()
+{
+	SessionSearch = MakeShareable(new FOnlineSessionSearch());
+	if (SessionSearch.IsValid())
+	{
+
+		SessionSearch->bIsLanQuery = true;
+		UE_LOG(LogTemp, Warning, TEXT("Session Search is starting"));
+		SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
+
+	}
+}
+
 void UPuzzleGameInstance::OnDestroySessionComplete(FName SessionName, bool bWasSuccessful)
 {
 	if (bWasSuccessful)
@@ -144,13 +149,19 @@ void UPuzzleGameInstance::OnDestroySessionComplete(FName SessionName, bool bWasS
 
 void UPuzzleGameInstance::OnFindSessionsComplete(bool bWasSuccessful)
 {
-	if(bWasSuccessful && SessionSearch.IsValid())
+	if(bWasSuccessful && SessionSearch.IsValid() && Menu != nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Finished finding sessions"));
+
+		TArray<FString> ServerNames;
+
 		for (const FOnlineSessionSearchResult& SearchResult : SessionSearch->SearchResults)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Found session named: %s"), *SearchResult.GetSessionIdStr());
+			ServerNames.Add(SearchResult.GetSessionIdStr());
 		}
+
+		Menu->SetServerList(ServerNames);
 	}
 	else
 	{
@@ -191,21 +202,22 @@ void UPuzzleGameInstance::Join(const FString& Address)
 
 	if (Menu != nullptr)
 	{
-		Menu->Teardown();
+		//Menu->Teardown();
+		Menu->SetServerList({ "TestServer1", "TestServer2", "TestServer3" });
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("JOINing game"));
+	//UE_LOG(LogTemp, Warning, TEXT("JOINing game"));
 
-	UEngine* Engine = GetEngine();
-	if (!ensure(Engine != nullptr)) return;
+	//UEngine* Engine = GetEngine();
+	//if (!ensure(Engine != nullptr)) return;
 
-	Engine->AddOnScreenDebugMessage(0, 5, FColor::Green, FString::Printf(TEXT("Joining %s"), *Address));
+	//Engine->AddOnScreenDebugMessage(0, 5, FColor::Green, FString::Printf(TEXT("Joining %s"), *Address));
 
-	APlayerController* PlayerController = GetFirstLocalPlayerController();
-	if (!ensure(PlayerController != nullptr)) return; //any alternative to this null check? 
+	//APlayerController* PlayerController = GetFirstLocalPlayerController();
+	//if (!ensure(PlayerController != nullptr)) return; //any alternative to this null check? 
 
 
-	PlayerController->ClientTravel(Address, ETravelType::TRAVEL_Absolute);
+	//PlayerController->ClientTravel(Address, ETravelType::TRAVEL_Absolute);
 
 }
 

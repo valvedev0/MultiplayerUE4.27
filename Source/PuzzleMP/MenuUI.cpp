@@ -4,8 +4,41 @@
 #include "MenuUI.h"
 #include "Components/Button.h"
 #include "Components/WidgetSwitcher.h"
+#include "UObject/ConstructorHelpers.h"
+#include "ServerRow.h"
+#include "Components/TextBlock.h"
 #include "Components/EditableTextBox.h"
 
+
+UMenuUI::UMenuUI(const FObjectInitializer& ObjectInitializer)
+{
+	//use constructor helpers to create the BP class for the server row
+	ConstructorHelpers::FClassFinder<UUserWidget> ServerRowBPClass(TEXT("/Game/MenuSystem/WBP_ServerRow"));
+	if (!ensure(ServerRowBPClass.Class != nullptr)) return;
+	ServerRowClass = ServerRowBPClass.Class;
+}
+
+void UMenuUI::SetServerList(TArray<FString> ServerNames)
+{
+	UWorld* World = this->GetWorld();
+	if (!ensure(World != nullptr)) return;
+
+	//clear  existing server rows before adding new ones
+	ServerList->ClearChildren();
+
+
+	//loop through the server names and create a server row for each one
+	for (const FString& ServerName : ServerNames)
+	{
+		UServerRow* Row = CreateWidget<UServerRow>(World, ServerRowClass);
+		if (!ensure(Row != nullptr)) return;
+		
+		Row->ServerName->SetText(FText::FromString(ServerName));
+		ServerList->AddChild(Row);
+	}
+	
+
+}
 
 bool UMenuUI::Initialize()
 {
@@ -47,9 +80,13 @@ void UMenuUI::JoinServer()
 {
 	if (MenuInterface != nullptr)
 	{
-		const FString& Address = IPAddressField->GetText().ToString();
-		MenuInterface->Join(Address);
+		/*const FString& Address = IPAddressField->GetText().ToString();*/
+		MenuInterface->Join("");
 	}
+
+	
+
+
 
 	//create a log message when the join button is clicked that prints the address and confirms that the join button is clicked
 	UE_LOG(LogTemp, Warning, TEXT("Joining the server"));
@@ -63,6 +100,12 @@ void UMenuUI::OpenJoinMenu()
 	if (!ensure(MenuSwitcher != nullptr)) return;
 	if (!ensure(JOinMenu != nullptr)) return;
 	MenuSwitcher->SetActiveWidget(JOinMenu);
+
+	//refresh the server list when the join menu is opened
+	if (MenuInterface != nullptr)
+	{
+		MenuInterface->RefreshServerList();
+	}
 
 }
 
