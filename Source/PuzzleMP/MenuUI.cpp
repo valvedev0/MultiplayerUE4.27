@@ -93,9 +93,10 @@ void UMenuUI::SelectIndex(uint32 Index)
 
 void UMenuUI::JoinServer()
 {
-	if(SelectedIndex.IsSet())
+	if(SelectedIndex.IsSet() && MenuInterface != nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Selected index: %d"), SelectedIndex.GetValue());
+		MenuInterface->Join(SelectedIndex.GetValue());
 	}
 	else
 	{
@@ -103,12 +104,6 @@ void UMenuUI::JoinServer()
 		
 	}
 
-
-	if (MenuInterface != nullptr)
-	{
-		/*const FString& Address = IPAddressField->GetText().ToString();*/
-		MenuInterface->Join("");
-	}
 
 	
 

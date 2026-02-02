@@ -25,8 +25,10 @@ public:
 
 	virtual void Host() = 0;
 
-	virtual void Join(const FString& Address) = 0;
+	virtual void Join(uint32 Index) = 0;
 
 	//refresh server list
 	virtual void RefreshServerList() = 0;
+
+	virtual void LoadMainMenu() = 0;
 };

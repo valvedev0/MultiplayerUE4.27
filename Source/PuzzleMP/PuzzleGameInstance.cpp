@@ -6,7 +6,7 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Blueprint/UserWidget.h"
 #include "OnlineSessionSettings.h"
-#include "Interfaces/OnlineSessionInterface.h"
+
 #include "MenuWidget.h"
 #include "MenuUI.h"
 
@@ -42,7 +42,7 @@ void UPuzzleGameInstance::Init()
 			SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UPuzzleGameInstance::OnCreateSessionComplete);
 			SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UPuzzleGameInstance::OnDestroySessionComplete);
 			SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UPuzzleGameInstance::OnFindSessionsComplete);
-
+			SessionInterface->OnJoinSessionCompleteDelegates.AddUObject(this, &UPuzzleGameInstance::OnJoinSessionComplete);
 
 
 		}
@@ -171,6 +171,35 @@ void UPuzzleGameInstance::OnFindSessionsComplete(bool bWasSuccessful)
 	
 }
 
+void UPuzzleGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result)
+{
+	if(!SessionInterface.IsValid())
+	{
+		return;
+	}
+
+	FString Address;
+	if(!SessionInterface->GetResolvedConnectString(SessionName, Address))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Could not get connect string"));
+		return;
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("JOINing game"));
+
+	UEngine* Engine = GetEngine();
+	if (!ensure(Engine != nullptr)) return;
+
+	Engine->AddOnScreenDebugMessage(0, 5, FColor::Green, FString::Printf(TEXT("Joining %s"), *Address));
+
+	APlayerController* PlayerController = GetFirstLocalPlayerController();
+	if (!ensure(PlayerController != nullptr)) return; //any alternative to this null check? 
+
+
+	PlayerController->ClientTravel(Address, ETravelType::TRAVEL_Absolute);
+
+}
+
 void UPuzzleGameInstance::OnCreateSessionComplete(FName SessionName, bool bWasSuccessful)
 {
 	if(!bWasSuccessful)
@@ -197,27 +226,37 @@ void UPuzzleGameInstance::OnCreateSessionComplete(FName SessionName, bool bWasSu
 
 
 
-void UPuzzleGameInstance::Join(const FString& Address)
+void UPuzzleGameInstance::Join(uint32 Index)
 {	
+
+	if(!SessionInterface.IsValid())
+	{
+		return;
+	}
+
+	if(!SessionSearch.IsValid())
+	{
+		return;
+	}
+
 
 	if (Menu != nullptr)
 	{
-		//Menu->Teardown();
-		Menu->SetServerList({ "TestServer1", "TestServer2", "TestServer3" });
+		Menu->Teardown();
+		//Menu->SetServerList({ "TestServer1", "TestServer2", "TestServer3" });
 	}
 
-	//UE_LOG(LogTemp, Warning, TEXT("JOINing game"));
-
-	//UEngine* Engine = GetEngine();
-	//if (!ensure(Engine != nullptr)) return;
-
-	//Engine->AddOnScreenDebugMessage(0, 5, FColor::Green, FString::Printf(TEXT("Joining %s"), *Address));
-
-	//APlayerController* PlayerController = GetFirstLocalPlayerController();
-	//if (!ensure(PlayerController != nullptr)) return; //any alternative to this null check? 
+	SessionInterface->JoinSession(0, SESSION_NAME, SessionSearch->SearchResults[Index]);
 
 
-	//PlayerController->ClientTravel(Address, ETravelType::TRAVEL_Absolute);
 
 }
 
+
+void UPuzzleGameInstance::LoadMainMenu()
+{
+	APlayerController* PlayerController = GetFirstLocalPlayerController();
+	if (!ensure(PlayerController != nullptr)) return;
+
+	PlayerController->ClientTravel("/Game/MenuSystem/MainMenuMap", ETravelType::TRAVEL_Absolute);
+}
