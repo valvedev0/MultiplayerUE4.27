@@ -20,6 +20,9 @@ public:
 
 	//set the server list function
 	void SetServerList(TArray<FString> ServerNames);
+	
+	//create a function to select a server index
+	void SelectIndex(uint32 Index);
 
 
 protected:
@@ -68,6 +71,11 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UPanelWidget* ServerList;
+
+	//create a toptional variable for selected index
+	TOptional<uint32> SelectedIndex;
+
+
 
 
 	

@@ -26,6 +26,8 @@ void UMenuUI::SetServerList(TArray<FString> ServerNames)
 	//clear  existing server rows before adding new ones
 	ServerList->ClearChildren();
 
+	//initialise an index variable and using a for loop to create server rows
+	uint32 i = 0;
 
 	//loop through the server names and create a server row for each one
 	for (const FString& ServerName : ServerNames)
@@ -34,11 +36,15 @@ void UMenuUI::SetServerList(TArray<FString> ServerNames)
 		if (!ensure(Row != nullptr)) return;
 		
 		Row->ServerName->SetText(FText::FromString(ServerName));
+		Row->Setup(this, i);
+		++i;
+
 		ServerList->AddChild(Row);
 	}
 	
 
 }
+
 
 bool UMenuUI::Initialize()
 {
@@ -76,8 +82,28 @@ void UMenuUI::HostServer()
 	UE_LOG(LogTemp, Warning, TEXT("Hosting the server"));
 }
 
+
+void UMenuUI::SelectIndex(uint32 Index)
+{
+	SelectedIndex = Index;
+	//UE_LOG(LogTemp, Warning, TEXT("Selected index: %d"), SelectedIndex);
+}
+
+
+
 void UMenuUI::JoinServer()
 {
+	if(SelectedIndex.IsSet())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Selected index: %d"), SelectedIndex.GetValue());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No index selected"));
+		
+	}
+
+
 	if (MenuInterface != nullptr)
 	{
 		/*const FString& Address = IPAddressField->GetText().ToString();*/
