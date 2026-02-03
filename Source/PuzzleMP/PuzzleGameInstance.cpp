@@ -116,9 +116,11 @@ void UPuzzleGameInstance::CreateSession()
 	{
 		FOnlineSessionSettings SessionSettings;
 
-		SessionSettings.bIsLANMatch = true;
+		SessionSettings.bIsLANMatch = false;
 		SessionSettings.NumPublicConnections = 2;
 		SessionSettings.bShouldAdvertise = true;
+		SessionSettings.bUsesPresence = true;
+		SessionSettings.bUseLobbiesIfAvailable = true;
 
 		SessionInterface->CreateSession(0, SESSION_NAME, SessionSettings);
 		UE_LOG(LogTemp, Warning, TEXT("Creating session now"));
@@ -130,6 +132,8 @@ void UPuzzleGameInstance::RefreshServerList()
 	SessionSearch = MakeShareable(new FOnlineSessionSearch());
 	if (SessionSearch.IsValid())
 	{
+		SessionSearch->MaxSearchResults = 100;
+		SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
 
 		SessionSearch->bIsLanQuery = true;
 		UE_LOG(LogTemp, Warning, TEXT("Session Search is starting"));
