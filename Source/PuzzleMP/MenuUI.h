@@ -9,6 +9,21 @@
 /**
  * 
  */
+
+ //create a struct to hold the server data like name and current players
+USTRUCT()
+struct FServerData
+{
+	GENERATED_BODY()
+
+	FString Name;
+	uint16 CurrentPlayers;
+	uint16 MaxPlayers;
+	FString HostUsername;
+
+};
+
+
 UCLASS()
 class PUZZLEMP_API UMenuUI : public UMenuWidget
 {
@@ -19,7 +34,7 @@ public:
 	UMenuUI(const FObjectInitializer& ObjectInitializer);
 
 	//set the server list function
-	void SetServerList(TArray<FString> ServerNames);
+	void SetServerList(TArray<FServerData> ServerNames);
 	
 	//create a function to select a server index
 	void SelectIndex(uint32 Index);

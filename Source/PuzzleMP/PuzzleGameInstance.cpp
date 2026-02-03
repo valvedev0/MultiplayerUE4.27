@@ -116,7 +116,16 @@ void UPuzzleGameInstance::CreateSession()
 	{
 		FOnlineSessionSettings SessionSettings;
 
-		SessionSettings.bIsLANMatch = false;
+		if (IOnlineSubsystem::Get()->GetSubsystemName() == "NULL")
+		{
+			SessionSettings.bIsLANMatch = true;
+		}
+		else
+		{
+			SessionSettings.bIsLANMatch = false;
+		}
+
+		//SessionSettings.bIsLANMatch = false;
 		SessionSettings.NumPublicConnections = 2;
 		SessionSettings.bShouldAdvertise = true;
 		SessionSettings.bUsesPresence = true;
@@ -135,7 +144,7 @@ void UPuzzleGameInstance::RefreshServerList()
 		SessionSearch->MaxSearchResults = 100;
 		SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
 
-		SessionSearch->bIsLanQuery = true;
+		//SessionSearch->bIsLanQuery = true;
 		UE_LOG(LogTemp, Warning, TEXT("Session Search is starting"));
 		SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
 
@@ -157,17 +166,30 @@ void UPuzzleGameInstance::OnFindSessionsComplete(bool bWasSuccessful)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Finished finding sessions"));
 
-		TArray<FString> ServerNames;
+		TArray<FServerData> ServerNames;
 		//for testing purpose add three mock server names
 
-		ServerNames.Add("Test Server 1");
+		/*ServerNames.Add("Test Server 1");
 		ServerNames.Add("Test Server 2");
-		ServerNames.Add("Test Server 3");
+		ServerNames.Add("Test Server 3");*/
+
+
+
 
 		for (const FOnlineSessionSearchResult& SearchResult : SessionSearch->SearchResults)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Found session named: %s"), *SearchResult.GetSessionIdStr());
-			ServerNames.Add(SearchResult.GetSessionIdStr());
+
+			//fill the serverdata struct with the sessions search results
+			FServerData Data;
+			Data.Name = SearchResult.GetSessionIdStr();
+			Data.CurrentPlayers = SearchResult.Session.NumOpenPublicConnections;
+			Data.MaxPlayers = SearchResult.Session.SessionSettings.NumPublicConnections;
+			Data.HostUsername = SearchResult.Session.OwningUserName;
+			ServerNames.Add(Data);
+
+			/*UE_LOG(LogTemp, Warning, TEXT("Found session named: %s"), *SearchResult.GetSessionIdStr());
+			ServerNames.Add(SearchResult.GetSessionIdStr());*/
 		}
 
 		Menu->SetServerList(ServerNames);
