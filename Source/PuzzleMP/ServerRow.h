@@ -18,6 +18,10 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* ServerName;
 
+	//create a bool to check whwther the row is selected
+	UPROPERTY(BlueprintReadOnly)
+	bool bIsSelected = false;
+
 	//create a setup fn with UMenuUI class and server index
 	void Setup(class UMenuUI* Parent, uint32 Index);
 

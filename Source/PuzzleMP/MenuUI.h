@@ -75,6 +75,8 @@ private:
 	//create a toptional variable for selected index
 	TOptional<uint32> SelectedIndex;
 
+	//create a function to update children
+	void UpdateChildren();
 
 
 

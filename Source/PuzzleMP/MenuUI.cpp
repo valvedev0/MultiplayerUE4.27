@@ -87,9 +87,21 @@ void UMenuUI::SelectIndex(uint32 Index)
 {
 	SelectedIndex = Index;
 	//UE_LOG(LogTemp, Warning, TEXT("Selected index: %d"), SelectedIndex);
+	UpdateChildren();
 }
 
-
+void UMenuUI::UpdateChildren()
+{
+	//loop through all the children of the server list and set their selection state
+	for(int32 i = 0 ;  i < ServerList->GetChildrenCount(); ++i)
+	{
+		auto Row = Cast<UServerRow>(ServerList->GetChildAt(i));
+		if (Row != nullptr)
+		{
+			Row->bIsSelected = (SelectedIndex.IsSet() && SelectedIndex.GetValue() == i);
+		}
+	}
+}
 
 void UMenuUI::JoinServer()
 {
@@ -104,16 +116,8 @@ void UMenuUI::JoinServer()
 		
 	}
 
-
-	
-
-
-
 	//create a log message when the join button is clicked that prints the address and confirms that the join button is clicked
 	UE_LOG(LogTemp, Warning, TEXT("Joining the server"));
-
-
-	
 }
 
 void UMenuUI::OpenJoinMenu()
