@@ -54,7 +54,15 @@ bool UMenuUI::Initialize()
 	bool Success = Super::Initialize();
 
 	if (HostButton == nullptr) return false;
-	HostButton->OnClicked.AddDynamic(this, &UMenuUI::HostServer);
+	HostButton->OnClicked.AddDynamic(this, &UMenuUI::OpenHostMenu);
+
+	if (!ensure(CancelHostMenuButton != nullptr)) return false;
+	CancelHostMenuButton->OnClicked.AddDynamic(this, &UMenuUI::OpenMainMenu);
+
+	if (!ensure(ConfirmHostMenuButton != nullptr)) return false;
+	ConfirmHostMenuButton->OnClicked.AddDynamic(this, &UMenuUI::HostServer);
+
+
 
 	if (JoinButton == nullptr) return false;
 	JoinButton->OnClicked.AddDynamic(this, &UMenuUI::OpenJoinMenu);
@@ -79,7 +87,8 @@ void UMenuUI::HostServer()
 {
 	if (MenuInterface != nullptr)
 	{
-		MenuInterface->Host();
+		FString ServerName = ServerHostName->Text.ToString();
+		MenuInterface->Host(ServerName);
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("Hosting the server"));
@@ -143,6 +152,11 @@ void UMenuUI::OpenMainMenu()
 	if (!ensure(MainMenu != nullptr)) return;
 	MenuSwitcher->SetActiveWidget(MainMenu);
 
+}
+
+void UMenuUI::OpenHostMenu()
+{
+	MenuSwitcher->SetActiveWidget(HostMenu);
 }
 
 

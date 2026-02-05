@@ -59,6 +59,11 @@ private:
 	UFUNCTION()
 	void OpenMainMenu();
 
+
+	UFUNCTION()
+	void OpenHostMenu();
+
+
 	//crete twwo buttons host and join which will be binded to the buttons in the widget
 	UPROPERTY(meta = (BindWidget))
 	class UButton* HostButton;
@@ -80,6 +85,18 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UWidget* JOinMenu;
+
+	UPROPERTY(meta = (BindWidget))
+	class UWidget* HostMenu;
+
+	UPROPERTY(meta = (BindWidget))
+	class UEditableTextBox* ServerHostName;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* CancelHostMenuButton;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* ConfirmHostMenuButton;
 
 	//UPROPERTY(meta = (BindWidget))
 	//class UEditableTextBox* IPAddressField;

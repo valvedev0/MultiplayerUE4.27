@@ -19,6 +19,8 @@ class PUZZLEMP_API UPuzzleGameInstance : public UGameInstance, public IMenuInter
 {
 	GENERATED_BODY()
 
+public:
+
 	//create constructor
 	UPuzzleGameInstance(const FObjectInitializer& ObjectInitializer);
 
@@ -27,7 +29,7 @@ class PUZZLEMP_API UPuzzleGameInstance : public UGameInstance, public IMenuInter
 
 	//create function to host a game
 	UFUNCTION(Exec)
-	void Host() override;
+	void Host(FString ServerName) override;
 
 	//create a load menu funmction that is blueprint callable and will be used to load the menu in the main menu map
 	UFUNCTION(BlueprintCallable)
@@ -42,6 +44,11 @@ class PUZZLEMP_API UPuzzleGameInstance : public UGameInstance, public IMenuInter
 	void Join(uint32 Index) override;
 
 	virtual void LoadMainMenu() override;
+
+	//refresh server list override
+	void RefreshServerList() override;
+
+private:
 
 	//create a subclass for the main menu which is of UserWidget type and we will make use of contrucion helpers to use the class finder
 	TSubclassOf<class UUserWidget> MenuClass;
@@ -63,8 +70,8 @@ class PUZZLEMP_API UPuzzleGameInstance : public UGameInstance, public IMenuInter
 
 	void CreateSession();
 
-	//refresh server list override
-	void RefreshServerList() override;
+	FString DesiredServerName;
+	
 
 	
 };
