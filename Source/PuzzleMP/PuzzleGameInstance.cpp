@@ -11,7 +11,7 @@
 #include "MenuUI.h"
 
 //create a constant for session name
-const static FName SESSION_NAME = TEXT("My Session");
+const static FName SESSION_NAME = TEXT("Game");
 const static FName SERVER_NAME_SETTINGS_KEY = TEXT("ServerName");
 
 UPuzzleGameInstance::UPuzzleGameInstance(const FObjectInitializer& ObjectInitializer)
@@ -266,7 +266,11 @@ void UPuzzleGameInstance::OnCreateSessionComplete(FName SessionName, bool bWasSu
 	UWorld* World = GetWorld();
 	if (!ensure(World != nullptr)) return;
 
-	World->ServerTravel("/Game/ThirdPersonCPP/Maps/ThirdPersonExampleMap?listen");
+	//World->ServerTravel("/Game/ThirdPersonCPP/Maps/ThirdPersonExampleMap?listen");
+
+	//change the map name to the one we want to use for hosting location :Content/ThirdPersonCPP/Maps/Lobby.umap
+	World->ServerTravel("/Game/ThirdPersonCPP/Maps/Lobby?listen");
+
 }
 
 
