@@ -54,6 +54,15 @@ void UPuzzleGameInstance::Init()
 	}
 	
 	UE_LOG(LogTemp, Warning, TEXT("Found UWidget Class %s"), *MenuClass->GetName());
+
+	//make use of object GEngine to call the network failure delegate and bind it to our OnNetworkFailure function in the game instance so that we can handle network failures and push the client back to the main menu
+	if (GEngine != nullptr)
+	{
+		GEngine->OnNetworkFailure().AddUObject(this, &UPuzzleGameInstance::OnNetworkFailure);
+	}
+
+
+	
 }
 
 void UPuzzleGameInstance::LoadMenu()
@@ -129,7 +138,7 @@ void UPuzzleGameInstance::CreateSession()
 		}
 
 		//SessionSettings.bIsLANMatch = false;
-		SessionSettings.NumPublicConnections = 2;
+		SessionSettings.NumPublicConnections = 5;
 		SessionSettings.bShouldAdvertise = true;
 		SessionSettings.bUsesPresence = true;
 		SessionSettings.bUseLobbiesIfAvailable = true;
@@ -212,6 +221,7 @@ void UPuzzleGameInstance::OnFindSessionsComplete(bool bWasSuccessful)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Could not find sessions"));
 	}
+
 	
 	
 }
@@ -243,6 +253,12 @@ void UPuzzleGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessio
 
 	PlayerController->ClientTravel(Address, ETravelType::TRAVEL_Absolute);
 
+}
+
+void UPuzzleGameInstance::OnNetworkFailure(UWorld* World, UNetDriver* NetDriver, ENetworkFailure::Type FailureType, const FString& ErrorString)
+{
+	//load the main menu when we have a network failure
+	LoadMainMenu();
 }
 
 void UPuzzleGameInstance::OnCreateSessionComplete(FName SessionName, bool bWasSuccessful)
@@ -299,6 +315,14 @@ void UPuzzleGameInstance::Join(uint32 Index)
 
 
 
+}
+
+void UPuzzleGameInstance::StartSession()
+{
+	if(SessionInterface.IsValid())
+	{
+		SessionInterface->StartSession(SESSION_NAME);
+	}
 }
 
 

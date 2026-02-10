@@ -24,6 +24,12 @@ public:
 
 private:
 
+	//create a start game function that will be called when we have enough players and the timer has finished
+	void StartGame();
+
+	//create a timer handle for the start game timer
+	FTimerHandle GameStartTimer;
+
 	//number of players in the lobby
 	uint32 NumPlayersInLobby = 0;
 

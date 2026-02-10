@@ -43,6 +43,9 @@ public:
 	UFUNCTION(Exec)
 	void Join(uint32 Index) override;
 
+	//create a function to trigeer start session fn
+	void StartSession();
+
 	virtual void LoadMainMenu() override;
 
 	//refresh server list override
@@ -67,6 +70,8 @@ private:
 	void OnDestroySessionComplete(FName SessionName, bool bWasSuccessful);
 	void OnFindSessionsComplete(bool bWasSuccessful);
 	void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
+	//create a delegate function that can handle network failure and push the client back to the main menu
+	void OnNetworkFailure(UWorld* World, UNetDriver* NetDriver, ENetworkFailure::Type FailureType, const FString& ErrorString);
 
 	void CreateSession();
 
