@@ -3,6 +3,7 @@
 
 #include "Gokart.h"
 #include "Components/InputComponent.h"
+#include "Engine/World.h"
 
 // Sets default values
 AGokart::AGokart()
@@ -25,14 +26,41 @@ void AGokart::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	FVector Force = GetActorForwardVector() * Throttle * MaxDrivingForce;
+	Force += GetAirResistance();
+	Force += GetRollingResistance();
+
 	FVector Acceleration = Force / Mass;
 	Velocity = Velocity + Acceleration * DeltaTime;
 
+	
+
+	ApplyRotation(DeltaTime);
 
 
 	UpdateLocationandVelocity(DeltaTime);
 
 
+}
+
+void AGokart::ApplyRotation(float DeltaTime)
+{
+	float DeltaLocation = FVector::DotProduct(GetActorForwardVector(), Velocity) * DeltaTime;
+	float RotationAngle = DeltaLocation / MinTurningRadius * SteeringThrow;
+	FQuat RotationDelta(GetActorUpVector(), RotationAngle);
+	Velocity = RotationDelta.RotateVector(Velocity);
+	AddActorWorldRotation(RotationDelta);
+}
+
+FVector AGokart::GetAirResistance()
+{
+	return -Velocity.GetSafeNormal() * Velocity.SizeSquared() * DragCoefficient;
+}
+
+FVector AGokart::GetRollingResistance()
+{
+	float AccelerationDueToGravity = -GetWorld()->GetGravityZ() / 100;
+	float NormalForce = Mass * AccelerationDueToGravity;
+	return -Velocity.GetSafeNormal() * RollingResistanceCoefficient * NormalForce;
 }
 
 void AGokart::UpdateLocationandVelocity(float DeltaTime)
@@ -54,12 +82,17 @@ void AGokart::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &AGokart::MoveForward);
-
+	PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &AGokart::MoveRight);
 }
 
 void AGokart::MoveForward(float Value)
 {
 	//Velocity = GetActorForwardVector() * Value * 20;
 	Throttle = Value;
+}
+
+void AGokart::MoveRight(float Value)
+{
+	SteeringThrow = Value;
 }
 

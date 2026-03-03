@@ -25,16 +25,23 @@ public:
 
 	
 
+	
+
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
 
 	void UpdateLocationandVelocity(float DeltaTime);
+	void ApplyRotation(float DeltaTime);
+
+	FVector GetAirResistance();
+	FVector GetRollingResistance();
 
 	FVector Velocity;
 
 	void MoveForward(float Value);
+	void MoveRight(float Value);
 
 	//mass of the kart, used to calculate acceleration and other physics related stuff in kg
 	UPROPERTY(EditAnywhere)
@@ -44,5 +51,20 @@ private:
 	float MaxDrivingForce = 10000;
 	
 	float Throttle = 0;
+
+	/*UPROPERTY(EditAnywhere)
+	float MaxDegreesPerSecond = 90;*/
+
+	UPROPERTY(EditAnywhere)
+	float MinTurningRadius = 10;
+
+	UPROPERTY(EditAnywhere)
+	float DragCoefficient = 16;
+
+	UPROPERTY(EditAnywhere)
+	float RollingResistanceCoefficient = 0.015f;
+
+	float SteeringThrow = 0;
+
 
 };
