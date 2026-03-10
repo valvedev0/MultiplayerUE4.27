@@ -40,8 +40,14 @@ private:
 
 	FVector Velocity;
 
-	void MoveForward(float Value);
-	void MoveRight(float Value);
+	/*void MoveForward(float Value);
+	void MoveRight(float Value);*/
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_MoveForward(float Value);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_MoveRight(float Value);
 
 	//mass of the kart, used to calculate acceleration and other physics related stuff in kg
 	UPROPERTY(EditAnywhere)
