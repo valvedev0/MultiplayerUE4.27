@@ -23,14 +23,21 @@ void AGokart::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (HasAuthority())
+	{
+		NetUpdateFrequency = 1;
+	}
 	
 }
 
 void AGokart::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	DOREPLIFETIME(AGokart, ReplicatedLocation);
-	DOREPLIFETIME(AGokart, ReplicatedRotation);
+	DOREPLIFETIME(AGokart, ReplicatedTransform);
+	DOREPLIFETIME(AGokart, Velocity);
+	DOREPLIFETIME(AGokart, Throttle);
+	DOREPLIFETIME(AGokart, SteeringThrow);
+	
 }
 
 FString GetEnumText(ENetRole Role)
@@ -71,18 +78,20 @@ void AGokart::Tick(float DeltaTime)
 
 	if (HasAuthority())
 	{
-		ReplicatedLocation = GetActorLocation();
-		ReplicatedRotation = GetActorRotation();
+		ReplicatedTransform = GetActorTransform();
+		
 	}
-	else
-	{
-		SetActorLocation(ReplicatedLocation);
-		SetActorRotation(ReplicatedRotation);
-	}
+	
 
 	//use getrole to display the role of the actor in the network, this is useful for debugging and understanding how the actor is replicated across the network
 	FString RoleString = GetEnumText(GetLocalRole());
 	DrawDebugString(GetWorld(), FVector(0, 0, 100), RoleString, this, FColor::White, DeltaTime);
+}
+
+
+void AGokart::OnRep_ReplicatedTransform()
+{
+	SetActorTransform(ReplicatedTransform);
 }
 
 void AGokart::ApplyRotation(float DeltaTime)

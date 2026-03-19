@@ -38,6 +38,7 @@ private:
 	FVector GetAirResistance();
 	FVector GetRollingResistance();
 
+	UPROPERTY(Replicated)
 	FVector Velocity;
 
 	/*void MoveForward(float Value);
@@ -59,6 +60,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	float MaxDrivingForce = 10000;
 	
+	UPROPERTY(Replicated)
 	float Throttle = 0;
 
 	/*UPROPERTY(EditAnywhere)
@@ -73,13 +75,13 @@ private:
 	UPROPERTY(EditAnywhere)
 	float RollingResistanceCoefficient = 0.015f;
 
+	UPROPERTY(Replicated)
 	float SteeringThrow = 0;
 
+	UPROPERTY(ReplicatedUsing = OnRep_ReplicatedTransform)
+	FTransform ReplicatedTransform;
 
-	UPROPERTY(Replicated)
-	FVector ReplicatedLocation;
-
-	UPROPERTY(Replicated)
-	FRotator ReplicatedRotation;
+	UFUNCTION()
+	void OnRep_ReplicatedTransform();
 
 };
