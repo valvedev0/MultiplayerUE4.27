@@ -4,12 +4,17 @@
 #include "Gokart.h"
 #include "Components/InputComponent.h"
 #include "Engine/World.h"
+#include "DrawDebugHelpers.h"
+#include "Net/UnrealNetwork.h"
+
+
 
 // Sets default values
 AGokart::AGokart()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	bReplicates = true;
 
 }
 
@@ -17,7 +22,32 @@ AGokart::AGokart()
 void AGokart::BeginPlay()
 {
 	Super::BeginPlay();
+
 	
+}
+
+void AGokart::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AGokart, ReplicatedLocation);
+	DOREPLIFETIME(AGokart, ReplicatedRotation);
+}
+
+FString GetEnumText(ENetRole Role)
+{
+	switch (Role)
+	{
+	case ROLE_None:
+		return "None";
+	case ROLE_SimulatedProxy:
+		return "SimulatedProxy";
+	case ROLE_AutonomousProxy:
+		return "AutonomousProxy";
+	case ROLE_Authority:
+		return "Authority";
+	default:
+		return "ERROR";
+	}
 }
 
 // Called every frame
@@ -39,7 +69,20 @@ void AGokart::Tick(float DeltaTime)
 
 	UpdateLocationandVelocity(DeltaTime);
 
+	if (HasAuthority())
+	{
+		ReplicatedLocation = GetActorLocation();
+		ReplicatedRotation = GetActorRotation();
+	}
+	else
+	{
+		SetActorLocation(ReplicatedLocation);
+		SetActorRotation(ReplicatedRotation);
+	}
 
+	//use getrole to display the role of the actor in the network, this is useful for debugging and understanding how the actor is replicated across the network
+	FString RoleString = GetEnumText(GetLocalRole());
+	DrawDebugString(GetWorld(), FVector(0, 0, 100), RoleString, this, FColor::White, DeltaTime);
 }
 
 void AGokart::ApplyRotation(float DeltaTime)
@@ -81,9 +124,23 @@ void AGokart::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &AGokart::Server_MoveForward);
-	PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &AGokart::Server_MoveRight);
+	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &AGokart::MoveForward);
+	PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &AGokart::MoveRight);
 }
+
+void AGokart::MoveForward(float Value)
+{
+	Throttle = Value;
+	Server_MoveForward(Value);
+}
+
+
+void AGokart::MoveRight(float Value)
+{
+	SteeringThrow = Value;
+	Server_MoveRight(Value);
+}
+
 
 void AGokart::Server_MoveForward_Implementation(float Value)
 {
